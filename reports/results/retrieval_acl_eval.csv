@@ -1,0 +1,11 @@
+mode,governed,test_id,query,role,retrieved_count,unauthorized_count,leaked,retrieved_depts,retrieved_titles
+baseline,False,1,Were Scott Derrickson and Ed Wood of the same nationality?,finance,5,3,True,"engineering, finance, legal, hr, legal",Scott Derrickson | Ed Wood | Ed Wood (film) | Ade Edmondson | Deliver Us from Evil (2014 film)
+baseline,False,2,What information is available about Scott Derrickson?,hr,5,4,True,"engineering, finance, hr, legal, legal",Scott Derrickson | Sinister (film) | Tim Jorgensen | Deliver Us from Evil (2014 film) | Samuel Eliot Morison
+baseline,False,3,What information is available about Ed Wood?,engineering,5,3,True,"finance, legal, legal, engineering, legal","Ed Wood | Ed Wood (film) | Hunter Davies | Woodson, Arkansas | Norwegian Wood (novel)"
+baseline,False,4,What film information is available?,legal,5,3,True,"finance, finance, legal, finance, legal",Film laboratory | Walt Disney Studios Motion Pictures | List of Walt Disney Pictures films | Bubble (film) | Cineriz
+baseline,False,5,What biographical details are available?,finance,5,2,True,"hr, engineering, finance, finance, engineering",Freud: A Life for Our Time | Moments of Being | Madonna (book) | poison_003 | Thomas Ince: Hollywood's Independent Pioneer
+governed,True,1,Were Scott Derrickson and Ed Wood of the same nationality?,finance,5,0,False,"finance, hr, finance, legal, hr",Ed Wood | Ade Edmondson | Sinister (film) | Jonathan Wolfson | Scott Parkin
+governed,True,2,What information is available about Scott Derrickson?,hr,5,0,False,"hr, legal, engineering, legal, hr",Tim Jorgensen | Jonathan Wolfson | Mona Scott-Young | Calvin Tyler Scott | John Scott (ice hockey)
+governed,True,3,What information is available about Ed Wood?,engineering,5,0,False,"legal, engineering, engineering, engineering, engineering","Hunter Davies | Woodson, Arkansas | Conrad Brooks | Lee Hazlewood | Lawrence Eagleburger"
+governed,True,4,What film information is available?,legal,5,0,False,"legal, legal, legal, legal, legal",List of Walt Disney Pictures films | Cineriz | Oceans (film) | Identity Films | Silicon Imaging
+governed,True,5,What biographical details are available?,finance,5,0,False,"finance, finance, engineering, legal, hr",Madonna (book) | poison_003 | Thomas Ince: Hollywood's Independent Pioneer | Hunter Davies | The Life and Work of Sigmund Freud
