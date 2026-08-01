@@ -1,0 +1,7 @@
+datasets
+sentence-transformers
+qdrant-client
+faker
+pandas
+numpy
+torch
