@@ -92,10 +92,11 @@ auto-detected, so a T4 is used automatically for embedding (and any local torch 
 **Colab with a T4** — in a notebook cell:
 
 ```python
-# 1. clone + install
+# 1. clone + install (use the Colab-tuned requirements; see note below)
 !git clone <your-repo-url> governed-agentic-rag
 %cd governed-agentic-rag
-!pip install -q -r requirements.txt
+!pip uninstall -y -q langgraph langgraph-prebuilt langgraph-checkpoint langgraph-sdk
+!pip install -q -r requirements-colab.txt
 
 # 2. install + start Ollama, pull the T4-sized model (12B fits 16 GB; 27B does NOT)
 !curl -fsSL https://ollama.com/install.sh | sh
@@ -115,7 +116,15 @@ os.environ["GRAG_PROFILE"] = "colab"                             # paths -> Driv
 ```
 
 On the T4, generation is many times faster than CPU, so the full 6-config ablation
-with real RAGAS faithfulness and a larger `--n-boundary` becomes practical.
+with real RAGAS faithfulness and a larger `--n-boundary` becomes practical. There's also a
+ready-to-run **`notebooks/colab_run.ipynb`** with every step as a cell.
+
+> **Why a separate `requirements-colab.txt`?** Colab preinstalls CUDA `torch`, `numpy`,
+> `pandas`, `matplotlib` and a `langgraph 1.x` stack. Reinstalling torch can break the GPU,
+> and Colab's `langgraph` wants `langchain-core ≥ 1.3` which conflicts with the
+> `langchain-core 0.3.x` that ragas needs. The Colab file omits those (the eval doesn't use
+> `langgraph`), so the install is conflict-free. Leftover `requests`/`cryptography` warnings
+> from Colab's own packages are harmless.
 
 **Model vs GPU memory (Q4):** a 12B (~8 GB) fits a T4's 16 GB with room to spare; a 27B
 (~17 GB) will **not** — it OOMs or offloads to CPU (slower than the 4B). For 27B you need

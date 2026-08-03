@@ -1,0 +1,35 @@
+# Colab-specific requirements.
+#
+# Differences from requirements.txt (why):
+#  - NO torch / numpy / pandas / matplotlib: Colab already ships these (with CUDA
+#    torch). Reinstalling torch here can downgrade it to a CPU build and break the GPU.
+#  - NO langgraph: the eval runs the plain GovernedPipeline; the LangGraph wrapper is
+#    optional and never called by run_eval.py. Dropping it removes the clash with
+#    Colab's preinstalled langgraph 1.x (which wants langchain-core >= 1.3).
+#  - NO presidio: the PII control falls back to a built-in regex detector, so PII
+#    redaction still works without spaCy/Presidio (avoids more version churn).
+#
+# LangChain is pinned to 0.3.x because ragas 0.4.3 imports a module removed in
+# langchain-community 0.4. Install with:
+#     pip install -q -r requirements-colab.txt
+
+# core pipeline (torch/numpy/pandas come from Colab)
+datasets
+sentence-transformers
+qdrant-client
+faker
+
+# local LLM (Ollama) + LangChain 0.3.x (required for ragas 0.4.3 compatibility)
+ollama
+langchain>=0.3,<0.4
+langchain-core>=0.3,<0.4
+langchain-community>=0.3,<0.4
+langchain-ollama>=0.2,<0.3
+
+# evaluation (matplotlib comes from Colab)
+ragas==0.4.3
+scikit-network
+
+# misc
+pyyaml
+tqdm
