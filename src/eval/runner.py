@@ -70,17 +70,20 @@ def run_ablation(
         log.info("=== config: %s ===", name)
         boundary_results = [pipeline.run(b.query, b.caller_role, gov) for b in boundary]
         poison_results = [pipeline.run(p.query, p.caller_role, gov) for p in poison]
-        # faithfulness/overhead reuse the boundary generations unless caller
-        # supplied a distinct QA set — avoids regenerating the same queries twice.
+        # faithfulness/overhead use the answerable QA set (public-doc questions),
+        # so governed configs produce grounded answers rather than refusals. Falls
+        # back to the boundary generations only if no QA set is available.
+        qa_source = qa_queries or getattr(suite, "qa", None)
         qa_results = (
-            [pipeline.run(q, role, gov) for q, role in qa_queries]
-            if qa_queries else boundary_results
+            [pipeline.run(q, role, gov) for q, role in qa_source]
+            if qa_source else boundary_results
         )
 
         row = {
             "governance": gov,
             "leak_rate": M.leak_rate(boundary_results, suite.acl_map),
             "injection_success": M.injection_success(poison_results),
+            "poison_exposure": M.poison_exposure(poison_results),
             "audit_completeness": M.audit_completeness(
                 boundary_results + poison_results + qa_results
             ),
@@ -90,8 +93,9 @@ def run_ablation(
             row["faithfulness"] = M.compute_faithfulness(qa_results, cfg)
         out[name] = row
         log.info(
-            "  leak=%.2f inj=%.2f audit=%.2f faith=%s lat=%.0fms tok=%.0f",
-            row["leak_rate"], row["injection_success"], row["audit_completeness"],
+            "  leak=%.2f inj=%.2f poison_exp=%.2f audit=%.2f faith=%s lat=%.0fms tok=%.0f",
+            row["leak_rate"], row["injection_success"], row["poison_exposure"],
+            row["audit_completeness"],
             f"{row['faithfulness']:.2f}" if "faithfulness" in row else "-",
             row["overhead"]["latency_ms"], row["overhead"]["total_tokens"],
         )

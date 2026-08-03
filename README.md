@@ -97,16 +97,17 @@ auto-detected, so a T4 is used automatically for embedding (and any local torch 
 %cd governed-agentic-rag
 !pip install -q -r requirements.txt
 
-# 2. install + start Ollama, pull the model
+# 2. install + start Ollama, pull the T4-sized model (12B fits 16 GB; 27B does NOT)
 !curl -fsSL https://ollama.com/install.sh | sh
 import subprocess, time; subprocess.Popen(["ollama", "serve"]); time.sleep(5)
-!ollama pull hf.co/unsloth/gemma-4-E4B-it-GGUF:Q4_K_M
+!ollama pull gemma4:12b
 
-# 3. choose where files live
+# 3. choose where files live — the colab profile already selects gemma4:12b
 import os
 from google.colab import drive; drive.mount("/content/drive")   # persistent
-os.environ["GRAG_PROFILE"] = "colab"                             # -> /content/drive/MyDrive/governed_rag
+os.environ["GRAG_PROFILE"] = "colab"                             # paths -> Drive, model -> gemma4:12b
 # (no Drive? use:  os.environ["GRAG_BASE_DIR"] = "/content/governed_rag")
+# (different model? override with:  os.environ["GRAG_MODEL"] = "...")
 
 # 4. build + run — on a T4 you can afford a larger N
 !python scripts/build_index.py
@@ -115,6 +116,10 @@ os.environ["GRAG_PROFILE"] = "colab"                             # -> /content/d
 
 On the T4, generation is many times faster than CPU, so the full 6-config ablation
 with real RAGAS faithfulness and a larger `--n-boundary` becomes practical.
+
+**Model vs GPU memory (Q4):** a 12B (~8 GB) fits a T4's 16 GB with room to spare; a 27B
+(~17 GB) will **not** — it OOMs or offloads to CPU (slower than the 4B). For 27B you need
+an A100/L4 (Colab Pro), then `GRAG_MODEL=gemma3:27b` (or the Gemma 4 equivalent).
 
 ## Configuration
 

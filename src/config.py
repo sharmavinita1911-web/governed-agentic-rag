@@ -39,7 +39,11 @@ def _apply_profile_and_env(cfg: dict) -> str:
     profile = os.environ.get("GRAG_PROFILE", "local")
     profiles = cfg.get("profiles", {})
     if profile in profiles and isinstance(profiles[profile], dict):
-        cfg.setdefault("paths", {}).update(profiles[profile].get("paths", {}))
+        prof = profiles[profile]
+        cfg.setdefault("paths", {}).update(prof.get("paths", {}))
+        # a profile may also override llm settings (e.g. a bigger model on GPU)
+        if isinstance(prof.get("llm"), dict):
+            cfg.setdefault("llm", {}).update(prof["llm"])
 
     # single-knob base-dir override (handy for Colab + Google Drive)
     base = os.environ.get("GRAG_BASE_DIR")

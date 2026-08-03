@@ -43,9 +43,12 @@ class OllamaLLM:
         self.model = llm["model"]
         self.temperature = llm.get("temperature", 0.0)
         self.max_tokens = llm.get("max_tokens", 512)
-        # honour a custom host if provided
+        # Generous timeout: CPU generation of a 4B model can take a minute+, and
+        # httpx's default (a few seconds) would abort it mid-run.
+        timeout = llm.get("timeout_s", 600)
         host = llm.get("host")
-        self._client = ollama.Client(host=host) if host else ollama.Client()
+        self._client = ollama.Client(host=host, timeout=timeout) if host \
+            else ollama.Client(timeout=timeout)
 
     def generate(self, prompt: str, system: Optional[str] = None) -> LLMResult:
         messages: List[dict] = []
