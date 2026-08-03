@@ -6,7 +6,9 @@ __pycache__/
 venv/
 data/raw/
 data/processed/
+data/qdrant/
 qdrant/
 artifacts/
+models/*.gguf
 *.log
 .DS_Store

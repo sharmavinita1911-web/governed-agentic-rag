@@ -1,0 +1,56 @@
+# Governed Agentic RAG — central configuration
+# All paths are relative to the repo root unless absolute.
+
+paths:
+  data_dir: data                 # local store (replaces the Colab Google-Drive BASE)
+  qdrant_dir: data/qdrant        # on-disk embedded Qdrant (no server needed)
+  artifacts_dir: artifacts       # metrics, plots, audit logs
+
+corpus:
+  subset: 500                    # number of HotpotQA validation questions to load
+  max_chars: 1200                # chunking window
+  overlap: 150
+  seed: 42
+
+embedding:
+  model: BAAI/bge-small-en-v1.5
+  query_prefix: "Represent this sentence for searching relevant passages: "
+  dim: 384
+
+vector_store:
+  collection: governed_rag
+  top_k: 5
+
+roles:
+  - hr
+  - finance
+  - legal
+  - engineering
+
+poison:
+  enabled: true
+  n_poison: 4
+
+# Local generator + judge, both served by Ollama.
+llm:
+  provider: ollama
+  # Unsloth GGUF pulled straight from HF by Ollama. Change the quant tag for
+  # speed/quality: Q4_K_M (balanced) < IQ4_XS < Q3_K_M (faster, rougher).
+  model: hf.co/unsloth/gemma-4-E4B-it-GGUF:Q4_K_M
+  host: http://localhost:11434
+  temperature: 0.0
+  max_tokens: 256                # shorter answers = faster CPU generation + fewer claims for C2
+
+# Which governance controls are active. The eval harness toggles these
+# on/off to produce the ablation + trade-off curve.
+governance:
+  c1_permission: true            # ACL filter at the vector layer
+  c2_grounding: true             # Self-RAG-style citation gate
+  c3_injection: true             # injection / poisoning screen
+  c4_audit: true                 # tamper-evident hash-chained log
+  pii_redaction: true            # Presidio redaction of retrieved chunks
+
+evaluation:
+  # "ragas" (local Ollama judge) | "nli" (entailment fallback, no LLM calls)
+  faithfulness_backend: ragas
+  nli_model: cross-encoder/nli-distilroberta-base   # used if RAGAS errors at runtime

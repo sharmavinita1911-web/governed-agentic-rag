@@ -1,0 +1,40 @@
+[project]
+name = "governed-agentic-rag"
+version = "0.1.0"
+description = "Governed Agentic RAG — measuring the safety-cost trade-off of a governance layer"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    # core pipeline
+    "datasets",
+    "sentence-transformers",
+    "qdrant-client",
+    "faker",
+    "pandas",
+    "numpy",
+    "torch",
+    # agent loop + local LLM (Ollama) — pinned to LangChain 0.3.x for ragas compat
+    "langgraph>=0.2,<0.3",
+    "langchain>=0.3,<0.4",
+    "langchain-core>=0.3,<0.4",
+    "langchain-community>=0.3,<0.4",
+    "langchain-ollama>=0.2,<0.3",
+    "ollama",
+    # governance controls
+    "presidio-analyzer",
+    "presidio-anonymizer",
+    # evaluation
+    "matplotlib",
+    "ragas==0.4.3",    # local-judge faithfulness (default backend)
+    # misc
+    "pyyaml",
+    "tqdm",
+]
+
+# Version notes:
+# - ragas 0.4.3 is incompatible with LangChain 1.x (it imports
+#   langchain_community.chat_models.vertexai, removed in community 0.4), so the
+#   whole LangChain stack is pinned to the 0.3 era above.
+# - ragas pulls scikit-network, which needs an MSVC C++ toolchain to build on Windows.
+# - If RAGAS ever errors at runtime the harness falls back to the NLI entailment
+#   backend automatically (set evaluation.faithfulness_backend: nli).
