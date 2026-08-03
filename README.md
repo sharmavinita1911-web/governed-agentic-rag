@@ -75,6 +75,47 @@ jupyter notebook notebooks/demo.ipynb
 Outputs land in `artifacts/`: `metrics.json`, `tradeoff.png`, `safety_bars.png`, `audit_sample.json`.
 Everything is seeded (`configs/default.yaml → corpus.seed`) for reproducibility.
 
+## Local machine vs Google Colab (T4 GPU)
+
+Switching machines is a single env var — **no code edits**. The compute device is
+auto-detected, so a T4 is used automatically for embedding (and any local torch models).
+
+| Env var | Purpose | Example |
+|---|---|---|
+| `GRAG_PROFILE` | pick a `paths` block from the config (`local` \| `colab`) | `colab` |
+| `GRAG_BASE_DIR` | put data/qdrant/artifacts under one dir (overrides profile) | `/content/governed_rag` |
+| `GRAG_OLLAMA_HOST` | point at a specific Ollama daemon | `http://127.0.0.1:11434` |
+| `GRAG_MODEL` | use a different model tag (e.g. a bigger one on GPU) | `gemma3:12b` |
+
+**Local (default):** nothing to set.
+
+**Colab with a T4** — in a notebook cell:
+
+```python
+# 1. clone + install
+!git clone <your-repo-url> governed-agentic-rag
+%cd governed-agentic-rag
+!pip install -q -r requirements.txt
+
+# 2. install + start Ollama, pull the model
+!curl -fsSL https://ollama.com/install.sh | sh
+import subprocess, time; subprocess.Popen(["ollama", "serve"]); time.sleep(5)
+!ollama pull hf.co/unsloth/gemma-4-E4B-it-GGUF:Q4_K_M
+
+# 3. choose where files live
+import os
+from google.colab import drive; drive.mount("/content/drive")   # persistent
+os.environ["GRAG_PROFILE"] = "colab"                             # -> /content/drive/MyDrive/governed_rag
+# (no Drive? use:  os.environ["GRAG_BASE_DIR"] = "/content/governed_rag")
+
+# 4. build + run — on a T4 you can afford a larger N
+!python scripts/build_index.py
+!python scripts/run_eval.py --n-boundary 20
+```
+
+On the T4, generation is many times faster than CPU, so the full 6-config ablation
+with real RAGAS faithfulness and a larger `--n-boundary` becomes practical.
+
 ## Configuration
 
 All knobs live in `configs/default.yaml`: corpus subset size, embedding model, roles,

@@ -1,10 +1,28 @@
 # Governed Agentic RAG — central configuration
 # All paths are relative to the repo root unless absolute.
 
+# Default (local) paths. Override per machine via the GRAG_PROFILE env var, which
+# selects a block under `profiles:` below (see src/config.py). Compute device is
+# auto-detected (CUDA/T4 if available) — no flag needed.
 paths:
   data_dir: data                 # local store (replaces the Colab Google-Drive BASE)
   qdrant_dir: data/qdrant        # on-disk embedded Qdrant (no server needed)
   artifacts_dir: artifacts       # metrics, plots, audit logs
+
+# Switch machines with:  export GRAG_PROFILE=colab   (or set it in a notebook cell)
+profiles:
+  local:
+    paths:
+      data_dir: data
+      qdrant_dir: data/qdrant
+      artifacts_dir: artifacts
+  colab:
+    # persists across sessions on mounted Google Drive; if you don't mount Drive,
+    # instead set GRAG_BASE_DIR=/content/governed_rag for an ephemeral session store.
+    paths:
+      data_dir: /content/drive/MyDrive/governed_rag
+      qdrant_dir: /content/drive/MyDrive/governed_rag/qdrant
+      artifacts_dir: /content/drive/MyDrive/governed_rag/artifacts
 
 corpus:
   subset: 500                    # number of HotpotQA validation questions to load
