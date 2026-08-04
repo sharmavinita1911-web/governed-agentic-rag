@@ -16,12 +16,50 @@ from typing import List, Optional, Tuple
 
 from .base import Chunk, ControlDecision, RequestContext
 
-_SENT_SPLIT = re.compile(r"(?<=[.!?])\s+")
+_SENT_SPLIT  = re.compile(r"(?<=[.!?])\s+")
+_BULLET      = re.compile(r"^[-*•·]\s+(.+)$")
+_NUMBERED    = re.compile(r"^\d+[.)]\s+(.+)$")
+# strips markdown: headers (#), bold/italic (*_), code (`), blockquote (>),
+# inline images/links, and horizontal rules
+_MD_STRIP    = re.compile(r"#{1,6}\s|[*_`>~]|!\[[^\]]*\]\([^)]*\)|\[[^\]]*\]\([^)]*\)|-{3,}")
+_MIN_CLAIM   = 10   # characters; shorter fragments are noise
 
 
 def split_claims(answer: str) -> List[str]:
-    """Naive sentence splitter — one claim per sentence."""
-    return [s.strip() for s in _SENT_SPLIT.split(answer.strip()) if s.strip()]
+    """Split a model answer into verifiable atomic claims.
+
+    Handles both markdown-formatted responses (bullet/numbered lists, headers)
+    and plain prose.  Strategy:
+
+    1. Scan every line for bullet/numbered list items — if any are found, each
+       item is one claim (markdown symbols stripped).  Most MLX / Gemma responses
+       are list-formatted, so this branch fires first.
+    2. Fall back to sentence-boundary splitting on cleaned prose for answers
+       written as plain paragraphs.
+
+    A minimum length of 10 chars filters out stray punctuation / fragments.
+    """
+    if not answer or not answer.strip():
+        return []
+
+    claims: List[str] = []
+
+    # Pass 1 — list items (catches bullet and numbered Gemma outputs)
+    for line in answer.splitlines():
+        line = line.strip()
+        m = _BULLET.match(line) or _NUMBERED.match(line)
+        if m:
+            text = _MD_STRIP.sub("", m.group(1)).strip()
+            if len(text) >= _MIN_CLAIM:
+                claims.append(text)
+
+    if claims:
+        return claims
+
+    # Pass 2 — plain prose: strip markdown symbols then split on sentence ends
+    prose = _MD_STRIP.sub("", answer)
+    prose = re.sub(r"\s+", " ", prose).strip()
+    return [p.strip() for p in _SENT_SPLIT.split(prose) if len(p.strip()) >= _MIN_CLAIM]
 
 
 class GroundingControl:
@@ -78,6 +116,16 @@ class GroundingControl:
     def apply(self, ctx: RequestContext, chunks: List[Chunk]) -> ControlDecision:
         answer = ctx.answer or ""
         claims = split_claims(answer)
+
+        if not claims:
+            return ControlDecision(
+                allow=False,
+                reasons=["no verifiable claims extracted — answer may be empty or unparseable"],
+                filtered_chunks=[],
+                metadata={"citations": [], "grounded_answer": "", "faithfulness": 0.0,
+                          "accepted": 0, "rejected": 0},
+            )
+
         citations: List[Tuple[str, str]] = []   # (claim, supporting_chunk_id)
         accepted: List[str] = []
         rejected: List[str] = []
@@ -92,8 +140,7 @@ class GroundingControl:
             else:
                 rejected.append(claim)
 
-        n = len(claims) or 1
-        faithfulness = len(accepted) / n
+        faithfulness = len(accepted) / len(claims)
         reasons = [f"grounded {len(accepted)}/{len(claims)} claims (backend={self.backend})"]
         for claim in rejected:
             reasons.append(f"REJECTED (ungrounded): {claim[:80]}")
