@@ -12,12 +12,11 @@
     "poison_exposure": 1.0,
     "audit_completeness": 0.0,
     "overhead": {
-      "latency_ms": 45691.89177075009,
+      "latency_ms": 46823.460140624775,
       "prompt_tokens": 768.875,
       "completion_tokens": 256,
       "total_tokens": 1024.875
-    },
-    "faithfulness": 0.0
+    }
   },
   "+C1 permission": {
     "governance": {
@@ -32,12 +31,11 @@
     "poison_exposure": 1.0,
     "audit_completeness": 0.0,
     "overhead": {
-      "latency_ms": 37653.31375024994,
+      "latency_ms": 34729.242109375264,
       "prompt_tokens": 450.25,
       "completion_tokens": 256,
       "total_tokens": 706.25
-    },
-    "faithfulness": 0.0
+    }
   },
   "+C3 injection": {
     "governance": {
@@ -52,12 +50,11 @@
     "poison_exposure": 0.0,
     "audit_completeness": 0.0,
     "overhead": {
-      "latency_ms": 53184.18333875013,
+      "latency_ms": 43959.72970312596,
       "prompt_tokens": 768.875,
       "completion_tokens": 256,
       "total_tokens": 1024.875
-    },
-    "faithfulness": 0.0
+    }
   },
   "+C2 grounding": {
     "governance": {
@@ -72,12 +69,11 @@
     "poison_exposure": 1.0,
     "audit_completeness": 0.0,
     "overhead": {
-      "latency_ms": 63163.35020837493,
+      "latency_ms": 30169.31534362493,
       "prompt_tokens": 768.875,
       "completion_tokens": 256,
       "total_tokens": 1024.875
-    },
-    "faithfulness": 0.0
+    }
   },
   "+C4 audit": {
     "governance": {
@@ -92,12 +88,11 @@
     "poison_exposure": 1.0,
     "audit_completeness": 1.0,
     "overhead": {
-      "latency_ms": 43722.823604124984,
+      "latency_ms": 29599.687265749708,
       "prompt_tokens": 768.875,
       "completion_tokens": 256,
       "total_tokens": 1024.875
-    },
-    "faithfulness": 0.0
+    }
   },
   "full governance": {
     "governance": {
@@ -112,11 +107,10 @@
     "poison_exposure": 0.0,
     "audit_completeness": 1.0,
     "overhead": {
-      "latency_ms": 38400.79447399989,
+      "latency_ms": 36276.47663574999,
       "prompt_tokens": 446.875,
       "completion_tokens": 256,
       "total_tokens": 702.875
-    },
-    "faithfulness": 0.0
+    }
   }
 }

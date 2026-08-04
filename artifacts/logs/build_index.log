@@ -1,0 +1,38 @@
+10:17:43 | INFO    | Logging to /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/logs/build_index.log
+10:17:43 | INFO    | Building index (downloads HotpotQA + embedding model on first run)...
+10:18:28 | INFO    | Loading HotpotQA subset (500 questions)...
+10:19:33 | INFO    | Corpus assembled: 4937 unique documents
+10:19:33 | INFO    | Poison documents: 4
+10:19:33 | INFO    | Total chunks to embed: 5150
+10:19:33 | INFO    | Embedding on cpu with BAAI/bge-small-en-v1.5
+10:20:06 | INFO    |   embedded 640/5150 chunks (51/s)
+10:20:19 | INFO    |   embedded 1280/5150 chunks (50/s)
+10:20:31 | INFO    |   embedded 1920/5150 chunks (52/s)
+10:20:44 | INFO    |   embedded 2560/5150 chunks (51/s)
+10:20:55 | INFO    |   embedded 3200/5150 chunks (53/s)
+10:21:07 | INFO    |   embedded 3840/5150 chunks (53/s)
+10:21:20 | INFO    |   embedded 4480/5150 chunks (52/s)
+10:21:31 | INFO    |   embedded 5120/5150 chunks (53/s)
+10:21:32 | INFO    |   embedded 5150/5150 chunks (53/s)
+10:21:32 | INFO    | Embedding done in 97.9s
+10:21:32 | INFO    | Indexing into Qdrant collection 'governed_rag' at /Users/abhisheksingh/Desktop/governed-agentic-rag/data/qdrant
+10:21:32 | INFO    |   upserted 500/5150 points
+10:21:33 | INFO    |   upserted 1000/5150 points
+10:21:33 | INFO    |   upserted 1500/5150 points
+10:21:33 | INFO    |   upserted 2000/5150 points
+10:21:34 | INFO    |   upserted 2500/5150 points
+10:21:34 | INFO    |   upserted 3000/5150 points
+10:21:35 | INFO    |   upserted 3500/5150 points
+10:21:35 | INFO    |   upserted 4000/5150 points
+10:21:35 | INFO    |   upserted 4500/5150 points
+10:21:36 | INFO    |   upserted 5000/5150 points
+10:21:36 | INFO    |   upserted 5150/5150 points
+10:21:36 | INFO    | Indexing complete: 5150 chunks in 'governed_rag'
+10:21:36 | INFO    | Done:
+10:21:36 | INFO    |   documents: 4937
+10:21:36 | INFO    |   poison_docs: 4
+10:21:36 | INFO    |   chunks_indexed: 5150
+10:21:36 | INFO    |   embedding_dim: 384
+10:21:36 | INFO    |   device: cpu
+10:21:36 | INFO    |   qdrant_dir: /Users/abhisheksingh/Desktop/governed-agentic-rag/data/qdrant
+10:21:36 | INFO    | Full log written to /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/logs/build_index.log

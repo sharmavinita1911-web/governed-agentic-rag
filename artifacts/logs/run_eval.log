@@ -1,0 +1,42 @@
+10:36:41 | INFO    | Logging to /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/logs/run_eval.log
+10:38:19 | INFO    | Building test suite from the indexed corpus...
+10:38:19 | INFO    |   boundary=5 poison=4 pii_probes=20
+10:38:19 | INFO    | Ablation: 6 configs x (boundary=5, poison=4) ragas=True
+10:38:19 | INFO    | === config: baseline ===
+10:52:30 | INFO    |   leak=1.00 inj=0.00 poison_exp=1.00 audit=0.00 faith=0.00 lat=45692ms tok=1025
+10:52:30 | INFO    | === config: +C1 permission ===
+11:03:32 | INFO    |   leak=0.00 inj=0.00 poison_exp=1.00 audit=0.00 faith=0.00 lat=37653ms tok=706
+11:03:32 | INFO    | === config: +C3 injection ===
+11:18:38 | INFO    |   leak=1.00 inj=0.00 poison_exp=0.00 audit=0.00 faith=0.00 lat=53184ms tok=1025
+11:18:38 | INFO    | === config: +C2 grounding ===
+11:36:34 | INFO    |   leak=1.00 inj=0.00 poison_exp=1.00 audit=0.00 faith=0.00 lat=63163ms tok=1025
+11:36:34 | INFO    | === config: +C4 audit ===
+11:50:35 | INFO    |   leak=1.00 inj=0.00 poison_exp=1.00 audit=1.00 faith=0.00 lat=43723ms tok=1025
+11:50:35 | INFO    | === config: full governance ===
+12:01:46 | INFO    |   leak=0.00 inj=0.00 poison_exp=0.00 audit=1.00 faith=0.00 lat=38401ms tok=703
+12:01:46 | INFO    | Wrote /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/metrics.json
+12:02:17 | INFO    | Wrote /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/tradeoff.png and /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/safety_bars.png
+12:02:52 | INFO    | Wrote /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/audit_sample.json (chain intact: True)
+12:02:52 | INFO    | Full log written to /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/logs/run_eval.log
+22:30:59 | INFO    | Logging to /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/logs/run_eval.log
+22:32:00 | INFO    | Logging to /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/logs/run_eval.log
+22:33:50 | INFO    | Logging to /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/logs/run_eval.log
+22:34:05 | INFO    | Building test suite from the indexed corpus...
+22:34:06 | INFO    |   boundary=5 poison=4 pii_probes=20
+22:34:06 | INFO    | Ablation: 6 configs x (boundary=3, poison=4) ragas=False
+22:34:06 | INFO    | === config: baseline ===
+22:44:47 | INFO    |   leak=1.00 inj=0.00 poison_exp=1.00 audit=0.00 faith=- lat=46823ms tok=1025
+22:44:47 | INFO    | === config: +C1 permission ===
+22:55:20 | INFO    |   leak=0.00 inj=0.00 poison_exp=1.00 audit=0.00 faith=- lat=34729ms tok=706
+22:55:20 | INFO    | === config: +C3 injection ===
+23:06:37 | INFO    |   leak=1.00 inj=0.00 poison_exp=0.00 audit=0.00 faith=- lat=43960ms tok=1025
+23:06:37 | INFO    | === config: +C2 grounding ===
+23:14:49 | INFO    |   leak=1.00 inj=0.00 poison_exp=1.00 audit=0.00 faith=- lat=30169ms tok=1025
+23:14:49 | INFO    | === config: +C4 audit ===
+23:22:13 | INFO    |   leak=1.00 inj=0.00 poison_exp=1.00 audit=1.00 faith=- lat=29600ms tok=1025
+23:22:13 | INFO    | === config: full governance ===
+23:31:03 | INFO    |   leak=0.00 inj=0.00 poison_exp=0.00 audit=1.00 faith=- lat=36276ms tok=703
+23:31:03 | INFO    | Wrote /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/metrics.json
+23:31:05 | INFO    | Wrote /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/tradeoff.png and /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/safety_bars.png
+23:31:33 | INFO    | Wrote /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/audit_sample.json (chain intact: True)
+23:31:33 | INFO    | Full log written to /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/logs/run_eval.log

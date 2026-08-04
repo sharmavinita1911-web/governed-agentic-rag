@@ -9,5 +9,5 @@ data/processed/
 data/qdrant/
 qdrant/
 models/*.gguf
-*.log
+# *.log
 .DS_Store
