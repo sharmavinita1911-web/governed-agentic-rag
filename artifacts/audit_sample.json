@@ -1,0 +1,107 @@
+[
+  {
+    "seq": 0,
+    "ts": 1785825137.652596,
+    "actor_role": "hr",
+    "query": "What information is available about Mad Season (band)?",
+    "control": "retrieval",
+    "decision": "retrieved",
+    "reasons": [
+      "top_5 candidates"
+    ],
+    "chunk_ids": [
+      "doc_de16dd7314::0",
+      "doc_728dbf6d16::0",
+      "doc_1874d3db93::0",
+      "doc_3788752292::0",
+      "doc_1f866eae72::0"
+    ],
+    "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "hash": "624daa8c13fef61ee14d8baad213d36bdefa909ce84afc088fac668eb95eb642"
+  },
+  {
+    "seq": 1,
+    "ts": 1785825137.6526651,
+    "actor_role": "hr",
+    "query": "What information is available about Mad Season (band)?",
+    "control": "c1_permission",
+    "decision": "allow",
+    "reasons": [
+      "role=hr: 2 allowed, 3 blocked by ACL",
+      "BLOCKED doc_de16dd7314::0 (dept=finance, class=restricted)",
+      "BLOCKED doc_1874d3db93::0 (dept=finance, class=restricted)",
+      "BLOCKED doc_3788752292::0 (dept=finance, class=internal)"
+    ],
+    "chunk_ids": [
+      "doc_728dbf6d16::0",
+      "doc_1f866eae72::0"
+    ],
+    "prev_hash": "624daa8c13fef61ee14d8baad213d36bdefa909ce84afc088fac668eb95eb642",
+    "hash": "6235ff17433163272961ce547d0a8de760f7cb04b3621525a9669467bb2efc62"
+  },
+  {
+    "seq": 2,
+    "ts": 1785825137.6528761,
+    "actor_role": "hr",
+    "query": "What information is available about Mad Season (band)?",
+    "control": "c3_injection",
+    "decision": "screened",
+    "reasons": [
+      "no injection signatures detected"
+    ],
+    "chunk_ids": [
+      "doc_728dbf6d16::0",
+      "doc_1f866eae72::0"
+    ],
+    "prev_hash": "6235ff17433163272961ce547d0a8de760f7cb04b3621525a9669467bb2efc62",
+    "hash": "154aec295d67e2de6252c84cd904f306ec626b9552933b33930ccd3b32fa06af"
+  },
+  {
+    "seq": 3,
+    "ts": 1785825137.8204522,
+    "actor_role": "hr",
+    "query": "What information is available about Mad Season (band)?",
+    "control": "pii_redaction",
+    "decision": "redacted",
+    "reasons": [
+      "redacted 24 PII entities across 2 chunks"
+    ],
+    "chunk_ids": [
+      "doc_728dbf6d16::0",
+      "doc_1f866eae72::0"
+    ],
+    "prev_hash": "154aec295d67e2de6252c84cd904f306ec626b9552933b33930ccd3b32fa06af",
+    "hash": "597e9c494272a5cd71d6554e4806aab5f1344316fa50c5035a1fe6709ba070ad"
+  },
+  {
+    "seq": 4,
+    "ts": 1785825172.753953,
+    "actor_role": "hr",
+    "query": "What information is available about Mad Season (band)?",
+    "control": "generator",
+    "decision": "generated",
+    "reasons": [
+      "669 tokens"
+    ],
+    "chunk_ids": [
+      "doc_728dbf6d16::0",
+      "doc_1f866eae72::0"
+    ],
+    "prev_hash": "597e9c494272a5cd71d6554e4806aab5f1344316fa50c5035a1fe6709ba070ad",
+    "hash": "20ee536dc792d71353d9af7ad9980395830a8e9fa51cfd902cccd1ef262f96a3"
+  },
+  {
+    "seq": 5,
+    "ts": 1785825172.754101,
+    "actor_role": "hr",
+    "query": "What information is available about Mad Season (band)?",
+    "control": "c2_grounding",
+    "decision": "reject",
+    "reasons": [
+      "grounded 0/0 claims (backend=llm)"
+    ],
+    "chunk_ids": [],
+    "prev_hash": "20ee536dc792d71353d9af7ad9980395830a8e9fa51cfd902cccd1ef262f96a3",
+    "hash": "0d41078d756b16d8b569165a430bca43b2e7cca562ebbe06be46eab3afd04bb7"
+  }
+]
