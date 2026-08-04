@@ -1,12 +1,16 @@
-"""Local generator: a thin wrapper over Ollama serving Gemma (E4B).
+"""Local generator: a thin wrapper over Ollama.
 
 Every call returns the text *and* a :class:`Usage` record (prompt/completion
 tokens + wall-clock latency) so the evaluation harness can price the
 governance overhead — the token + latency half of the trade-off curve.
 
-Requires a running Ollama daemon with the model pulled:
+Requires a running Ollama daemon with the model pulled, e.g.:
 
-    ollama pull hf.co/unsloth/gemma-4-E4B-it-GGUF:Q4_K_M
+    ollama pull qwen3.5:9b-mlx          # recommended: MLX, fast on M4
+    ollama pull hf.co/unsloth/gemma-4-E4B-it-GGUF:Q4_K_M   # CPU fallback
+
+For thinking models (Qwen 3/3.5), thinking mode is disabled via the
+``think`` option so structured-output prompts (C2 judge) stay parseable.
 """
 from __future__ import annotations
 
@@ -56,11 +60,18 @@ class OllamaLLM:
             messages.append({"role": "system", "content": system})
         messages.append({"role": "user", "content": prompt})
 
+        options = {"temperature": self.temperature, "num_predict": self.max_tokens}
+        # Disable chain-of-thought for thinking models (Qwen 3/3.5).
+        # Without this, structured-output prompts (C2 judge "reply with just a
+        # number") get a long <think>…</think> block before the answer, which
+        # breaks the regex parse and inflates token counts.
+        options["think"] = False
+
         t0 = time.perf_counter()
         resp = self._client.chat(
             model=self.model,
             messages=messages,
-            options={"temperature": self.temperature, "num_predict": self.max_tokens},
+            options=options,
         )
         latency_ms = (time.perf_counter() - t0) * 1000.0
 

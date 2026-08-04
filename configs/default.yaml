@@ -57,7 +57,7 @@ llm:
   provider: ollama
   # Unsloth GGUF pulled straight from HF by Ollama. Change the quant tag for
   # speed/quality: Q4_K_M (balanced) < IQ4_XS < Q3_K_M (faster, rougher).
-  model: gemma4:12b-mlx
+  model: qwen3.5:9b-mlx
   host: http://localhost:11434
   temperature: 0.0
   max_tokens: 256                # shorter answers = faster CPU generation + fewer claims for C2
