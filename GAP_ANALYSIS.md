@@ -9,7 +9,7 @@
 
 | # | Gap | Severity | Status |
 |---|---|---|---|
-| 1 | Faithfulness = 0.0 everywhere — C2 claim splitter broken | Critical | **Fixed** |
+| 1 | Faithfulness = 0.0 everywhere — C2 claim splitter broken | Critical | **Code fixed — awaiting eval run to verify** |
 | 2 | `injection_success` = 0 at baseline — wrong metric for this model | Critical | Needs note in report |
 | 3 | Multi-hop planning is a stub (single retrieval round only) | Moderate | Not implemented |
 | 4 | Llama Guard / NeMo Guardrails not wired behind config flag | Moderate | Not implemented |
@@ -37,17 +37,23 @@ C2 always hard-rejects (allow=False)
 audit shows: "grounded 0/0 claims (backend=llm)"
 ```
 
-**Fix applied (Aug 2026):**
-`src/controls/c2_grounding.py` — `split_claims()` now handles:
-1. Bullet lines (`- item`, `* item`, `• item`)
-2. Numbered list lines (`1. item`, `2) item`)
-3. Markdown symbol stripping (`**bold**`, `*italic*`, `` `code` ``, `# headers`)
-4. Falls back to sentence splitting for plain prose
-5. Explicit early-return guard when 0 claims extracted (clear audit reason instead of silent 0)
+**Fixes applied (Aug 2026) — all code complete:**
 
-**Impact of fix:** Re-run `python scripts/run_eval.py --n-boundary 3` to get real
-faithfulness numbers. Expected range: 0.3–0.7 depending on how closely the model
-stays within the retrieved context.
+1. `src/controls/c2_grounding.py` — `split_claims()` rewritten:
+   - Handles bullet lines, numbered lists, markdown stripping, prose fallback
+   - Explicit early-return guard when 0 claims extracted
+   - Unit tested against 5 output formats — all pass
+
+2. `src/agent/llm.py` — `think=False` added to `OllamaLLM.generate()`.
+   Prevents thinking chains from filling token budget leaving empty answer.
+
+3. `src/eval/metrics.py` — new `faithfulness_llm` backend:
+   uses `split_claims` + `OllamaLLM` (think=False). Replaces RAGAS.
+
+4. `configs/default.yaml` — `faithfulness_backend: llm`.
+
+**Pending verification:** Run `python scripts/run_eval.py --n-boundary 5`.
+Expected: `faithfulness > 0` (range 0.3–0.7) in `artifacts/metrics.json`.
 
 ---
 

@@ -75,5 +75,5 @@ evaluation:
   # "ragas" = local Ollama judge. Meaningful ONLY with a strong judge (run on Colab
   # with gemma4:12b). With a 4B/CPU judge RAGAS returns 0/NaN — the harness then
   # auto-falls back to the deterministic "nli" backend so you never get NaN.
-  faithfulness_backend: ragas
+  faithfulness_backend: llm
   nli_model: cross-encoder/nli-distilroberta-base

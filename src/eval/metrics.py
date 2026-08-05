@@ -5,7 +5,10 @@ Turns pipeline runs into the paper's numbers:
   - leak_rate            : % of runs where a chunk the caller may not see reaches
                            the context window
   - injection_success    : % of poison runs where the model emits an injected canary
-  - faithfulness         : RAGAS faithfulness (local judge) with an NLI fallback
+  - faithfulness         : fraction of answer claims supported by retrieved context;
+                           three backends: "llm" (Ollama judge, recommended),
+                           "nli" (cross-encoder, fast/deterministic),
+                           "ragas" (RAGAS framework, falls back to NLI on failure)
   - audit_completeness   : % of retrievals recorded in the hash-chained log
   - overhead             : mean added latency (ms) and tokens
 
@@ -90,8 +93,43 @@ def overhead(results) -> Dict[str, float]:
 
 
 # ---------------------------------------------------------------------------
-# Faithfulness — RAGAS (local judge) with an NLI entailment fallback.
+# Faithfulness — three backends: llm | nli | ragas
 # ---------------------------------------------------------------------------
+
+def faithfulness_llm(results, cfg: dict) -> float:
+    """LLM-as-judge faithfulness using split_claims + OllamaLLM verifier.
+
+    For each QA result: splits the answer into atomic claims with the
+    markdown-aware ``split_claims``, then asks the Ollama model (think=False
+    enforced via OllamaLLM) whether each claim is directly supported by one
+    of the retrieved passages.  Returns the mean supported fraction across all
+    results that have both an answer and retrieved chunks.
+
+    This is the recommended backend — it reuses the same LLM and verifier
+    logic as Control C2 but runs post-hoc over the QA set so faithfulness is
+    measured consistently across all ablation configs (including those where
+    C2 is not active).
+    """
+    from ..agent.llm import OllamaLLM
+    from ..controls.c2_grounding import GroundingControl, split_claims
+
+    llm = OllamaLLM(cfg)                          # think=False already set in OllamaLLM
+    grounding = GroundingControl(llm=llm, backend="llm")
+
+    per_answer = []
+    for r in results:
+        answer = r.answer or ""
+        claims = split_claims(answer)
+        if not claims or not r.chunks_used:
+            continue
+        accepted = sum(
+            1 for claim in claims
+            if grounding._supported_by(claim, r.chunks_used) is not None
+        )
+        per_answer.append(accepted / len(claims))
+
+    return mean(per_answer) if per_answer else 0.0
+
 
 def faithfulness_nli(results, nli_model: str) -> float:
     """Entailment-based groundedness: mean over answers of the fraction of claims
@@ -154,23 +192,42 @@ def faithfulness_ragas(results, cfg: dict) -> float:
 
 
 def compute_faithfulness(results, cfg: dict) -> float:
-    """Dispatch on config; degrade gracefully to NLI.
+    """Dispatch to the configured faithfulness backend; degrade gracefully.
 
-    RAGAS with a small local judge often returns NaN (no extractable statements)
-    or 0 (judge can't verify), so we fall back to the deterministic NLI backend
-    whenever RAGAS errors *or* returns NaN. Never returns NaN.
+    Backends (set via ``evaluation.faithfulness_backend`` in default.yaml):
+
+    ``llm``   — Ollama LLM judge with think=False (recommended).  Uses our
+                markdown-aware split_claims + the same _verify_llm_multi logic
+                as Control C2.  Produces meaningful scores with Qwen 3.5 / Gemma 4.
+    ``nli``   — Deterministic cross-encoder entailment.  Fast, no LLM calls,
+                good fallback for CPU-only runs.
+    ``ragas`` — RAGAS framework LLM-as-judge.  Falls back to NLI when RAGAS
+                returns NaN or 0.0 (silent failure from thinking-mode output).
+
+    Never returns NaN.
     """
     import math
 
-    backend = cfg.get("evaluation", {}).get("faithfulness_backend", "nli")
+    backend = cfg.get("evaluation", {}).get("faithfulness_backend", "llm")
     nli_model = cfg.get("evaluation", {}).get("nli_model")
-    if backend == "ragas":
+
+    if backend == "llm":
         try:
-            score = faithfulness_ragas(results, cfg)
+            score = faithfulness_llm(results, cfg)
             if score is not None and not math.isnan(score):
                 return score
-            print("[metrics] RAGAS returned NaN; falling back to NLI.")
-        except Exception as e:  # noqa: BLE001 - RAGAS-local can be slow/flaky
+        except Exception as e:  # noqa: BLE001
+            print(f"[metrics] LLM faithfulness failed ({e}); falling back to NLI.")
+
+    elif backend == "ragas":
+        try:
+            score = faithfulness_ragas(results, cfg)
+            if score is not None and not math.isnan(score) and score > 0.0:
+                return score
+            reason = "NaN" if (score is None or math.isnan(score)) else "0.0 (likely silent failure)"
+            print(f"[metrics] RAGAS returned {reason}; falling back to NLI.")
+        except Exception as e:  # noqa: BLE001
             print(f"[metrics] RAGAS failed ({e}); falling back to NLI.")
+
     score = faithfulness_nli(results, nli_model)
     return 0.0 if score is None or math.isnan(score) else score
