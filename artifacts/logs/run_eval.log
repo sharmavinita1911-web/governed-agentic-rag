@@ -65,3 +65,5 @@
 13:22:45 | INFO    |   boundary=5 poison=4 pii_probes=20
 13:22:45 | INFO    | Ablation: 6 configs x (boundary=3, poison=4) ragas=True
 13:22:45 | INFO    | === config: baseline ===
+13:44:15 | INFO    |   leak=1.00 inj=0.00 poison_exp=1.00 audit=0.00 faith=0.00 lat=42299ms tok=1028
+13:44:15 | INFO    | === config: +C1 permission ===

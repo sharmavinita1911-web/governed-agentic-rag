@@ -6,6 +6,7 @@ faker
 pandas
 numpy
 torch
+python-dotenv
 
 # --- agent loop + local LLM (Ollama) ---
 # Pinned to the 0.3-era LangChain: ragas 0.4.3 is incompatible with LangChain 1.x
