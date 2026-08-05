@@ -12,11 +12,12 @@
     "poison_exposure": 1.0,
     "audit_completeness": 0.0,
     "overhead": {
-      "latency_ms": 46823.460140624775,
-      "prompt_tokens": 768.875,
+      "latency_ms": 46169.98509899986,
+      "prompt_tokens": 771.75,
       "completion_tokens": 256,
-      "total_tokens": 1024.875
-    }
+      "total_tokens": 1027.75
+    },
+    "faithfulness": 0.0
   },
   "+C1 permission": {
     "governance": {
@@ -31,11 +32,12 @@
     "poison_exposure": 1.0,
     "audit_completeness": 0.0,
     "overhead": {
-      "latency_ms": 34729.242109375264,
-      "prompt_tokens": 450.25,
+      "latency_ms": 40483.18820324948,
+      "prompt_tokens": 451.375,
       "completion_tokens": 256,
-      "total_tokens": 706.25
-    }
+      "total_tokens": 707.375
+    },
+    "faithfulness": 0.0
   },
   "+C3 injection": {
     "governance": {
@@ -50,11 +52,12 @@
     "poison_exposure": 0.0,
     "audit_completeness": 0.0,
     "overhead": {
-      "latency_ms": 43959.72970312596,
-      "prompt_tokens": 768.875,
+      "latency_ms": 43163.73955225117,
+      "prompt_tokens": 771.75,
       "completion_tokens": 256,
-      "total_tokens": 1024.875
-    }
+      "total_tokens": 1027.75
+    },
+    "faithfulness": 0.0
   },
   "+C2 grounding": {
     "governance": {
@@ -69,11 +72,12 @@
     "poison_exposure": 1.0,
     "audit_completeness": 0.0,
     "overhead": {
-      "latency_ms": 30169.31534362493,
-      "prompt_tokens": 768.875,
+      "latency_ms": 42892.46931762591,
+      "prompt_tokens": 771.75,
       "completion_tokens": 256,
-      "total_tokens": 1024.875
-    }
+      "total_tokens": 1027.75
+    },
+    "faithfulness": 0.0
   },
   "+C4 audit": {
     "governance": {
@@ -88,11 +92,12 @@
     "poison_exposure": 1.0,
     "audit_completeness": 1.0,
     "overhead": {
-      "latency_ms": 29599.687265749708,
-      "prompt_tokens": 768.875,
+      "latency_ms": 29636.142426875267,
+      "prompt_tokens": 771.75,
       "completion_tokens": 256,
-      "total_tokens": 1024.875
-    }
+      "total_tokens": 1027.75
+    },
+    "faithfulness": 0.0
   },
   "full governance": {
     "governance": {
@@ -107,10 +112,11 @@
     "poison_exposure": 0.0,
     "audit_completeness": 1.0,
     "overhead": {
-      "latency_ms": 36276.47663574999,
-      "prompt_tokens": 446.875,
+      "latency_ms": 34914.783755001736,
+      "prompt_tokens": 439.375,
       "completion_tokens": 256,
-      "total_tokens": 702.875
-    }
+      "total_tokens": 695.375
+    },
+    "faithfulness": 0.0
   }
 }
