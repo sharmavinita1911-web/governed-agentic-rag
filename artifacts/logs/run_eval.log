@@ -60,3 +60,8 @@
 09:35:11 | INFO    | Wrote /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/tradeoff.png and /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/safety_bars.png
 09:35:47 | INFO    | Wrote /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/audit_sample.json (chain intact: True)
 09:35:47 | INFO    | Full log written to /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/logs/run_eval.log
+13:22:28 | INFO    | Logging to /Users/abhisheksingh/Desktop/governed-agentic-rag/artifacts/logs/run_eval.log
+13:22:45 | INFO    | Building test suite from the indexed corpus...
+13:22:45 | INFO    |   boundary=5 poison=4 pii_probes=20
+13:22:45 | INFO    | Ablation: 6 configs x (boundary=3, poison=4) ragas=True
+13:22:45 | INFO    | === config: baseline ===
